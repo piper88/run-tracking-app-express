@@ -1,0 +1,22 @@
+{
+  "name": "run-tracking-app-express",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/misspants87/run-tracking-app-express.git"
+  },
+  "author": "sarah.debey@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/misspants87/run-tracking-app-express/issues"
+  },
+  "homepage": "https://github.com/misspants87/run-tracking-app-express#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
