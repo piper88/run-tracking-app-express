@@ -27,7 +27,7 @@ describe('testing run routes', function() {
         .catch((err) => done(err));
       });
       it('should return a run', function(done) {
-        request.get('localhost:3000/api/run?date=today')
+        request.get('localhost:3000/api/run/today')
         .end((err, res) => {
           if (err) return done(err);
           expect(res.status).to.equal(200);

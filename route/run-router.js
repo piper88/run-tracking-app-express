@@ -2,8 +2,8 @@
 
 const express = require('express');
 const Router = express.Router;
-const url = require('url');
-const querystring = require('querystring');
+// const url = require('url');
+// const querystring = require('querystring');
 
 const runRouter = new Router();
 
@@ -11,15 +11,10 @@ const storage = require('../lib/storage.js');
 
 module.exports = exports = runRouter;
 
-var parseUrl = function(req, res, next) {
-  req.url = url.parse(req.url);
-  req.url.query = querystring.parse(req.url.query);
-  next();
-};
 
-
-runRouter.get('/api/run', parseUrl, function (req, res) {
-  storage.fetchItem(req.url.query.date)
+runRouter.get('/api/run/:date', function (req, res) {
+  console.log(`req.params.date ${req.params.date}`)
+  storage.fetchItem(req.params.date)
     .then(run => {
       res.writeHead(200, {'Content-Type': 'application/json'});
       res.end(run);
