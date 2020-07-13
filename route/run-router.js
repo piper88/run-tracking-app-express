@@ -13,7 +13,6 @@ module.exports = exports = runRouter;
 
 
 runRouter.get('/api/run/:date', function (req, res) {
-  console.log(`req.params.date ${req.params.date}`)
   storage.fetchItem(req.params.date)
     .then(run => {
       res.writeHead(200, {'Content-Type': 'application/json'});

@@ -36,24 +36,24 @@ describe('testing run routes', function() {
         });
       });
     });
-    // describe('with missing run date', function() {
-    //   it('should return a 404 not found error', function(done) {
-    //     request.get('localhost:3000/api/run')
-    //     .end((err, res) => {
-    //       expect(res.status).to.equal(404);
-    //       done();
-    //     });
-    //   });
-    // });
+    describe('with missing run date', function() {
+      it('should return a 404 not found error', function(done) {
+        request.get('localhost:3000/api/run')
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });
 
-    // describe('with invalid run date', function() {
-    //   it('should return a 404 not found error', function(done) {
-    //     request.get('localhost:3000/api/run?date=neverp')
-    //     .end((err, res) => {
-    //       expect(res.status).to.equal(404);
-    //       done();
-    //     });
-    //   });
-    // });
+    describe('with invalid run date', function() {
+      it('should return a 404 not found error', function(done) {
+        request.get('localhost:3000/api/run?date=neverp')
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });
   });
 });
