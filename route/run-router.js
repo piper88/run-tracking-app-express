@@ -12,21 +12,11 @@ module.exports = exports = runRouter;
 
 runRouter.get('/api/run/:date', function (req, res, next) {
   debug('route GET /api/run');
-  // var err = new Error('please work');
-  // next(err);
   storage.fetchItem(req.params.date)
     .then(run => {
       res.json(run);
-      // res.writeHead(200, {'Content-Type': 'application/json'});
-      // res.end(run);
     })
     .catch(err => {
-      //err will either be expected date, in which case, no error status, or....??????
       next(err);
-      //error from rejected promise
-      // console.error(err);
-      // //error sent to client
-      // res.writeHead(404, {'Content-Type': 'text/plain'});
-      // res.end();
     });
 });
