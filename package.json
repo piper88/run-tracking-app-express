@@ -15,10 +15,15 @@
   "bugs": {
     "url": "https://github.com/misspants87/run-tracking-app-express/issues"
   },
+  "scripts": {
+  "start": "DEBUG='run*' node server.js",
+  "test": "DEBUG='run*' ./node_modules/mocha/bin/mocha"
+},
   "homepage": "https://github.com/misspants87/run-tracking-app-express#readme",
   "dependencies": {
     "bluebird": "^3.7.2",
     "chai": "^4.2.0",
+    "debug": "^4.1.1",
     "express": "^4.17.1",
     "mkdirp": "^1.0.4",
     "superagent": "^5.2.2"
