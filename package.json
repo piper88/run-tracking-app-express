@@ -4,7 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "DEBUG='run*' node server.js",
+    "test": "DEBUG='run*' ./node_modules/mocha/bin/mocha --exit"
   },
   "repository": {
     "type": "git",
@@ -15,10 +16,6 @@
   "bugs": {
     "url": "https://github.com/misspants87/run-tracking-app-express/issues"
   },
-  "scripts": {
-  "start": "DEBUG='run*' node server.js",
-  "test": "DEBUG='run*' ./node_modules/mocha/bin/mocha"
-},
   "homepage": "https://github.com/misspants87/run-tracking-app-express#readme",
   "dependencies": {
     "bluebird": "^3.7.2",
@@ -26,6 +23,7 @@
     "debug": "^4.1.1",
     "express": "^4.17.1",
     "mkdirp": "^1.0.4",
+    "mocha": "^8.0.1",
     "superagent": "^5.2.2"
   }
 }
