@@ -24,11 +24,6 @@ describe('testing run routes', function() {
       .then(() => done())
       .catch((err) => done(err));
     })
-    after(done => {
-      storage.deleteItem(run.date)
-      .then(() => done())
-      .catch((err) => done(err));
-    })
       it('should return a run', function(done) {
         request.get(`localhost:3000/api/run/today`)
         .end((err, res) => {
@@ -62,6 +57,21 @@ describe('testing run routes', function() {
         });
       });
     });
-
   });
+
+  describe('testing POST requests to /api/run', function() {
+    debug('testing POST requests');
+    describe ('with valid body', function() {
+      debug('testing POST with valid body');
+      it('should return a run', function(done) {
+        request.post('localhost:3000/api/run')
+        .send(run)
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(200);
+          done();
+        })
+      })
+    })
+  })
 });
