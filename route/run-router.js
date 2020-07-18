@@ -14,7 +14,7 @@ module.exports = runRouter;
 
 runRouter.get('/api/run/:date', function (req, res, next) {
   debug('route GET /api/run/:date');
-  storage.fetchItem(req.params.date)
+  return storage.fetchItem(req.params.date)
     .then(run => {
       res.json(run);
     })
@@ -25,16 +25,17 @@ runRouter.get('/api/run/:date', function (req, res, next) {
 
 runRouter.post('/api/run', parseJSON, function (req, res, next) {
   debug('route POST /api/run');
-  try {
-    let run = new Run(req.body.date, req.body.distance, req.body.pace)
-    storage.createItem(run)
-    .then(run => {
-      res.json(run);
+  let run = new Run(req.body.date, req.body.distance, req.body.pace)
+  .then((theRun) => {
+    return storage.createItem(theRun)
+    .then(newRun => {
+      res.json(newRun);
     })
     .catch(err => {
       next(err);
-    });
-  } catch (err) {
-      next(err);
-  };
-});
+    })
+  })
+  .catch (err => {
+    next(err);
+  })
+})
