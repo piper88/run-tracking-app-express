@@ -39,3 +39,17 @@ runRouter.post('/api/run', parseJSON, function (req, res, next) {
     next(err);
   })
 })
+
+runRouter.delete('/api/run/:date', function (req, res, next) {
+  debug('route DELETE /api/run/:date');
+  return storage.deleteItem(req.params.date)
+  .then((date) => {
+    debug('then after storage.deleteItem');
+    res.status(204);
+    res.send('successfully deleted run');
+  })
+  .catch(err => {
+    next(err);
+  })
+
+})

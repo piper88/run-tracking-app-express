@@ -41,7 +41,6 @@ describe('testing run routes', function() {
         request.get('localhost:3000/api/run')
         .end((err, res) => {
           expect(res.status).to.equal(404);
-          // expect(res.error.text).to.equal('"expected date"');
           done();
         });
       });
@@ -53,7 +52,6 @@ describe('testing run routes', function() {
         request.get('localhost:3000/api/run/never')
         .end((err, res) => {
           expect(res.status).to.equal(404);
-          // expect(res.error.text).to.equal('"expected date"');
           done();
         });
       });
@@ -117,6 +115,59 @@ describe('testing run routes', function() {
         .send({date: 'whenever', distance: 4.5})
         .end((err, res) => {
           expect(res.status).to.equal(400);
+          done();
+        })
+      })
+    })
+  })
+
+  describe('testing DELETE requests to /api/run/:date', function() {
+    debug('testing DELETE')
+    describe('with valid date', function() {
+      before(done => {
+        storage.createItem(run)
+        .then(() => done())
+        .catch((err) => done(err));
+      })
+      debug('testing DELETE with valid date');
+      it('should return a 204 code', function(done) {
+        request.delete('localhost:3000/api/run/today')
+        .end((err,res) => {
+          if(err) return done(err);
+          debug(res.status);
+          expect(res.status).to.equal(204);
+          done();
+        })
+      })
+    })
+
+    describe('with invalid date', function() {
+      before(done => {
+        storage.createItem(run)
+        .then(() => done())
+        .catch(err => done(err));
+      })
+      after(done => {
+        storage.deleteItem(run.date)
+        .then(() => done())
+        .catch(err => done(err));
+      })
+      debug('testing DELETE with invalid date');
+      it('should return a 404 not found', function(done) {
+        request.delete('localhost:3000/api/run/never')
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        })
+      })
+    })
+
+    describe('with missing date', function() {
+      it('should return a 404', function(done) {
+        request.delete('localhost:3000/api/run')
+        .end((err, res) => {
+          debug(res.error);
+          expect(res.status).to.equal(404);
           done();
         })
       })
