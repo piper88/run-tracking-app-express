@@ -11,4 +11,5 @@ module.exports = exports = function (date, distance, pace) {
   this.date = date;
   this.distance = distance;
   this.pace = pace;
+  return Promise.resolve(this);
 }
