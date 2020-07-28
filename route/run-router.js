@@ -33,33 +33,16 @@ runRouter.post('/api/run', parseJSON, async function (req, res, next) {
   }
 });
 
-runRouter.post('/api/run', parseJSON, function (req, res, next) {
-  let run = new Run(req.body.date, req.body.distance, req.body.pace)
-  .then((theRun) => {
-    return storage.createItem(theRun)
-    .then(newRun => {
-      res.json(newRun);
-    })
-    .catch(err => {
-      next(err);
-    })
-  })
-  .catch (err => {
-    next(err);
-  })
-})
-
-runRouter.delete('/api/run/:date', function (req, res, next) {
+runRouter.delete('/api/run/:date', async function (req, res, next) {
   debug('route DELETE /api/run/:date');
-  return storage.deleteItem(req.params.date)
-  .then(() => {
-    debug('then after storage.deleteItem');
-    res.status(204);
-    res.send('successfully deleted run');
-  })
-  .catch(err => {
+  try {
+    await storage.deleteItem(req.params.date);
+    res.status(204).send('successfully deleted run');
+  } catch(err) {
+    debug('catch');
+    console.log(err);
     next(err);
-  })
+  }
 })
 
 runRouter.put('/api/run/:date', parseJSON, function(req, res, next) {
