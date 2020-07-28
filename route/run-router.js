@@ -11,16 +11,24 @@ const storage = require('../lib/storage.js');
 
 module.exports = runRouter;
 
-
-runRouter.get('/api/run/:date', function (req, res, next) {
+runRouter.get('/api/run/:date', async function (req, res, next) {
   debug('route GET /api/run/:date');
-  return storage.fetchItem(req.params.date)
-    .then(run => {
-      res.json(run);
-    })
-    .catch(err => {
-      next(err);
-    });
+  try {
+    debug('before')
+    const run = await storage.fetchItem(req.params.date);
+    debug('after')
+    res.json(run);
+  } catch(err) {
+    debug('runRouter get catch')
+    next(err);
+  }
+  // return storage.fetchItem(req.params.date)
+  //   .then(run => {
+  //     res.json(run);
+  //   })
+  //   .catch(err => {
+  //     next(err);
+  //   });
 });
 
 runRouter.post('/api/run', parseJSON, function (req, res, next) {
