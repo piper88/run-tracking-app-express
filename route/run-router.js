@@ -45,15 +45,15 @@ runRouter.delete('/api/run/:date', async function (req, res, next) {
   }
 })
 
-runRouter.put('/api/run/:date', parseJSON, function(req, res, next) {
-  let replacementRun;
-  storage.doesItemExist(req.params.date)
-  .then(() => new Run(req.body.date, req.body.distance, req.body.pace))
-  .then((theRun) => {
-    replacementRun = theRun;
-    return storage.deleteItem(req.params.date);
-  })
-  .then(() => storage.createItem(replacementRun))
-  .then(newRun => res.json(newRun))
-  .catch(err => next(err));
+
+
+runRouter.put('/api/run/:date', parseJSON, async function(req, res, next) {
+  try {
+    let replacementRun = await new Run(req.body.date, req.body.distance, req.body.pace);
+    await storage.deleteItem(req.params.date);
+    await storage.createItem(replacementRun)
+    res.json(req.body);
+  } catch(err) {
+    next(err);
+  }
 })
