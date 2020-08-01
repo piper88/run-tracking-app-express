@@ -4,7 +4,7 @@ const debug = require('debug')('run:server');
 const runRouter = require('./route/run-router.js');
 const errorHandling = require('./lib/error-handling.js');
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.use(runRouter);
