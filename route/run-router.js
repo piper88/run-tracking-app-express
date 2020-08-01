@@ -26,8 +26,8 @@ runRouter.post('/api/run', parseJSON, async function (req, res, next) {
   debug('route POST /api/run');
   try {
     let run = await new Run(req.body.date, req.body.distance, req.body.pace);
-    let newRun = await storage.createItem(run);
-    res.json(newRun);
+    await storage.createItem(run);
+    res.json(run);
   } catch(err) {
     next(err);
   }
@@ -52,7 +52,7 @@ runRouter.put('/api/run/:date', parseJSON, async function(req, res, next) {
     let replacementRun = await new Run(req.body.date, req.body.distance, req.body.pace);
     await storage.deleteItem(req.params.date);
     await storage.createItem(replacementRun)
-    res.json(req.body);
+    res.json(replacementRun);
   } catch(err) {
     next(err);
   }
