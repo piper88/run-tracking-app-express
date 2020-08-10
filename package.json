@@ -26,6 +26,7 @@
     "mocha": "^8.0.1",
     "mongodb": "^3.6.0",
     "mongoose": "^5.9.28",
-    "superagent": "^5.2.2"
+    "superagent": "^5.2.2",
+    "validator": "^13.1.1"
   }
 }

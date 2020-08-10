@@ -3,7 +3,7 @@
 const Router = require('express').Router;
 const debug = require('debug')('run:run-router');
 const parseJSON = require('body-parser').json();
-const Run = require('../model/run.js');
+const RunModel = require('../model/run.js');
 
 const runRouter = new Router();
 
@@ -22,15 +22,27 @@ runRouter.get('/api/run/:date', async function (req, res, next) {
   }
 });
 
-runRouter.post('/api/run', parseJSON, async function (req, res, next) {
+// runRouter.post('/api/run', parseJSON, async function (req, res, next) {
+//   debug('route POST /api/run');
+//   try {
+//     let run = await new Run(req.body.date, req.body.distance, req.body.pace);
+//     await storage.createItem(run);
+//     res.json(run);
+//   } catch(err) {
+//     next(err);
+//   }
+// });
+
+runRouter.post('/api/run', parseJSON, function (req, res, next) {
   debug('route POST /api/run');
-  try {
-    let run = await new Run(req.body.date, req.body.distance, req.body.pace);
-    await storage.createItem(run);
-    res.json(run);
-  } catch(err) {
-    next(err);
-  }
+  let run = new RunModel({date: req.body.date, distance: req.body.distance, pace: req.body.pace});
+  run.save()
+  .then(doc => {
+    res.json(doc);
+  })
+  .catch(err => {
+    next(err)
+  })
 });
 
 runRouter.delete('/api/run/:date', async function (req, res, next) {

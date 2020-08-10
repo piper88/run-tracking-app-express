@@ -1,23 +1,43 @@
 const createError = require('http-errors');
+const debug = require('debug');
+let mongoose = require('mongoose');
+let validator = require('validator');
+
+var runSchema = new mongoose.Schema({
+  date: {type: String, required: [true, 'Date required']},
+  distance: {type: Number, required: [true, 'Distance required']},
+  pace: {type: Number, required: [true, 'Pace required']}
+})
 
 
-//factors that affect Rate of Perceived Exertion (RPE)
-  //done alone or with others
-  //music or no music
-  //temperature outside
-  //mentally fatiguing activity prior to running
-  //amount of sleep
-  //amount of water that day
-  //
-module.exports = exports = function (date, distance, pace) {
-  if (!date) return Promise.reject(createError(400, 'expected date'));
-  if (!distance) return Promise.reject(createError(400, 'expected distance'));
-  if (!pace) return Promise.reject(createError(400, 'expected pace'));
-  this.date = date;
-  this.distance = distance;
-  this.pace = pace;
-  return this;
-  //same as above?
-  //is returning a resolved promise the same as just returning a value?
-  // return Promise.resolve(this);
-}
+//mongoose validates before saving, thus pre hook isn't running with post example with missing body, because it's failing on validation, doesn't even get to saving.
+// runSchema.pre('save', function() {
+//   console.log('pre save hook');
+//   next();
+// })
+
+//mongoose recognizes this as error handler, because of 3 paramaters including error. Anytime an erorr is triggered in pre hook, or save, this runs.
+runSchema.post('save', function(error, doc, next) {
+  console.log('post.save error handler');
+  // console.error(error.errors);
+  // console.error(error.name); //ValidationError
+  // console.log(error.errors.date.message) //this gets us the custom error message set in the Schema (e.g. Date required)
+  // console.error(error.errors.date.properties);
+  //this next passes error back to rejected promise in runRouter
+  next(error);
+})
+
+//be sure to define any pre/post hooks before compiling the model (the line below). Otherwise the hooks won't be added.
+module.exports = mongoose.model('Run', runSchema);
+
+//WITH MISSING BODY, pre hook not running, post hook is
+//OUTPUT:
+// run:run-router route POST /api/run +0ms
+// post save hook
+//   run:run-router catch??????? +10ms
+//   run:error-handling error handling middleware +0ms
+
+//WITH VALID BODY, pre hook running, post hook not
+//OUTPUT
+// run:run-router route POST /api/run +0ms
+// pre save hook
