@@ -4,7 +4,8 @@ const Router = require('express').Router;
 const debug = require('debug')('run:run-router');
 const parseJSON = require('body-parser').json();
 const RunModel = require('../model/run.js');
-
+const mongoose = require('mongoose');
+const createError = require('http-errors');
 const runRouter = new Router();
 
 const storage = require('../lib/storage.js');
@@ -13,25 +14,20 @@ module.exports = runRouter;
 
 runRouter.get('/api/run/:date', async function (req, res, next) {
   debug('route GET /api/run/:date');
-  try {
-    const run = await storage.fetchItem(req.params.date);
-    res.json(run);
-  } catch(err) {
-    debug('runRouter get catch')
-    next(err);
-  }
-});
 
-// runRouter.post('/api/run', parseJSON, async function (req, res, next) {
-//   debug('route POST /api/run');
-//   try {
-//     let run = await new Run(req.body.date, req.body.distance, req.body.pace);
-//     await storage.createItem(run);
-//     res.json(run);
-//   } catch(err) {
-//     next(err);
-//   }
-// });
+      //not finding a document specified in search will not throw an error.
+    let run = await RunModel.findOne({date: req.params.date});
+
+    if (run)  {
+      //rse.json identical to res.send when what's passed in is object or array, but res.json will also convert non objects(e.g. null and undefined)
+      res.json(run);
+      return;
+    }
+    let err = createError(404, 'run not found');
+    next(err);
+  });
+
+
 
 runRouter.post('/api/run', parseJSON, function (req, res, next) {
   debug('route POST /api/run');
