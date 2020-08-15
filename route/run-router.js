@@ -62,12 +62,19 @@ runRouter.delete('/api/run/:date', function (req, res, next) {
 
 
 runRouter.put('/api/run/:date', parseJSON, async function(req, res, next) {
-  try {
-    let replacementRun = await new Run(req.body.date, req.body.distance, req.body.pace);
-    await storage.deleteItem(req.params.date);
-    await storage.createItem(replacementRun)
-    res.json(replacementRun);
-  } catch(err) {
+  debug('route PUT /api/run/:date');
+  let filter = {date: req.params.date};
+  let update = {date: req.body.date, distance: req.body.distance, pace: req.body.pace}
+  RunModel.findOneAndUpdate(filter, update, {new: true})
+  .then((result) => {
+    if (!result) {
+      let err = createError(404, 'run not found');
+      next(err);
+      return;
+    }
+    res.json(result);
+  })
+  .catch(err => {
     next(err);
-  }
+  })
 })
