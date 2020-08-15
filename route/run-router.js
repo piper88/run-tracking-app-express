@@ -63,6 +63,13 @@ runRouter.delete('/api/run/:date', function (req, res, next) {
 
 runRouter.put('/api/run/:date', parseJSON, async function(req, res, next) {
   debug('route PUT /api/run/:date');
+
+  //checks for missing request body
+  if (Object.keys(req.body).length == 0) {
+    let err = createError(400, 'must update at least one field');
+    next(err);
+    return;
+  }
   let filter = {date: req.params.date};
   let update = {date: req.body.date, distance: req.body.distance, pace: req.body.pace}
   RunModel.findOneAndUpdate(filter, update, {new: true})

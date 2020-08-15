@@ -9,7 +9,6 @@ const debug = require('debug')('run:run-test');
 require('../server.js');
 
 describe('testing run routes', function() {
-  // storage.createResourceDirectory();
   let run = {
     date: 'today',
     distance: 2,
@@ -170,7 +169,7 @@ describe('testing run routes', function() {
   describe('testing PUT /api/run', function() {
     debug('testing PUT /api/run');
 
-    describe('with valid date and body', function() {
+    describe('with valid date, updating all run properties', function() {
       before(done => {
         new RunModel({date: run.date, distance: run.distance, pace: run.pace}).save()
         .then(() => done())
@@ -192,6 +191,53 @@ describe('testing run routes', function() {
         });
       });
     });
+
+    describe('with valid date and only updating distance', function() {
+      before(done => {
+        new RunModel({date: run.date, distance: run.distance, pace: run.pace}).save()
+        .then(() => done())
+        .catch(err => done(err));
+      });
+      after(done => {
+        RunModel.deleteOne({date: run.date})
+        .then(() => done())
+        .catch(err => done(err));
+      });
+      it('should return a run with a new distance', function(done) {
+        request.put('localhost:3000/api/run/today')
+        .send({distance: 12})
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(200);
+          expect(res.body.distance).to.equal(12);
+          done();
+        });
+      });
+    });
+
+    describe('with valid date and only updating pace', function() {
+      before(done => {
+        new RunModel({date: run.date, distance: run.distance, pace: run.pace}).save()
+        .then(() => done())
+        .catch(err => done(err));
+      });
+      after(done => {
+        RunModel.deleteOne({date: run.date})
+        .then(() => done())
+        .catch(err => done(err));
+      });
+      it('should return a run with a new pace', function(done) {
+        request.put('localhost:3000/api/run/today')
+        .send({pace: 500})
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(200);
+          expect(res.body.pace).to.equal(500);
+          done();
+        });
+      });
+    });
+
     describe('with invalid date', function() {
       before(done => {
         new RunModel({date: run.date, distance: run.distance, pace: run.pace}).save()
@@ -199,7 +245,7 @@ describe('testing run routes', function() {
         .catch(err => done(err));
       });
       after(done => {
-        RunModel.deleteOne({date: 'run.date'})
+        RunModel.deleteOne({date: run.date})
         .then(() => done())
         .catch(err => done(err));
       });
@@ -212,105 +258,26 @@ describe('testing run routes', function() {
         });
       });
     });
-  //
-  //   describe('with missing date in body', function() {
-  //     before(done => {
-  //       let oldRun = {
-  //         date: '6-8-20',
-  //         distance: 1,
-  //         pace: 600,
-  //       };
-  //       storage.createItem(oldRun)
-  //       .then(() => done())
-  //       .catch(err => done(err));
-  //     });
-  //     after(done => {
-  //       storage.deleteItem('6-8-20')
-  //       .then(() => done())
-  //       .catch(err => done(err));
-  //     });
-  //     it('should return a 400 error', function(done) {
-  //       request.put('localhost:3000/api/run/6-8-20')
-  //       .send({distance: 5, pace: 500})
-  //       .end((err, res) => {
-  //         expect(res.status).to.equal(400);
-  //         done();
-  //       });
-  //     });
-  //   });
-  //   describe('with missing distance', function() {
-  //     before(done => {
-  //       let run = {
-  //         date: '6-8-20',
-  //         distance: 1,
-  //         pace: 600,
-  //       };
-  //       storage.createItem(run)
-  //       .then(() => done())
-  //       .catch(err => done(err));
-  //     });
-  //     after(done => {
-  //       storage.deleteItem('6-8-20')
-  //       .then(() => done())
-  //       .catch(err => done(err));
-  //     });
-  //     it('should return a 400 error', function(done) {
-  //       request.put('localhost:3000/api/run/6-8-20')
-  //       .send({date: '6-8-20', pace: 500})
-  //       .end((err, res) => {
-  //         expect(res.status).to.equal(400);
-  //         done();
-  //       });
-  //     });
-  //   });
-  //   describe('with missing pace', function() {
-  //     before(done => {
-  //       let run = {
-  //         date: '6-8-20',
-  //         distance: 1,
-  //         pace: 600,
-  //       };
-  //       storage.createItem(run)
-  //       .then(() => done())
-  //       .catch(err => done(err));
-  //     });
-  //     after(done => {
-  //       storage.deleteItem('6-8-20')
-  //       .then(() => done())
-  //       .catch(err => done(err));
-  //     });
-  //     it('should return a 400 error', function(done) {
-  //       request.put('localhost:3000/api/run/6-8-20')
-  //       .send({date: '6-8-20' ,distance: 5})
-  //       .end((err, res) => {
-  //         expect(res.status).to.equal(400);
-  //         done();
-  //       });
-  //     });
-  //   });
-  //   describe('with missing request body', function() {
-  //     before(done => {
-  //       let run = {
-  //         date: '6-8-20',
-  //         distance: 1,
-  //         pace: 600,
-  //       };
-  //       storage.createItem(run)
-  //       .then(() => done())
-  //       .catch(err => done(err));
-  //     });
-  //     after(done => {
-  //       storage.deleteItem('6-8-20')
-  //       .then(() => done())
-  //       .catch(err => done(err));
-  //     });
-  //     it('should return a 400 error', function(done) {
-  //       request.put('localhost:3000/api/run/6-8-20')
-  //       .end((err, res) => {
-  //         expect(res.status).to.equal(400);
-  //         done();
-  //       });
-  //     });
-  //   });
+
+    describe('with missing request body', function() {
+      before(done => {
+        new RunModel({date: run.date, distance: run.distance, pace: run.pace}).save()
+        .then(() => done())
+        .catch(err => done(err));
+      });
+      after(done => {
+        RunModel.deleteOne({date: run.date})
+        .then(() => done())
+        .catch(err => done(err));
+      });
+      it('should return a 400 error', function(done) {
+        request.put('localhost:3000/api/run/today')
+        .end((err, res) => {
+          expect(res.status).to.equal(400);
+          expect(res.body.message).to.equal('must update at least one field')
+          done();
+        });
+      });
+    });
   });
 });
