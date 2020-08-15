@@ -41,17 +41,23 @@ runRouter.post('/api/run', parseJSON, function (req, res, next) {
   })
 });
 
-runRouter.delete('/api/run/:date', async function (req, res, next) {
+runRouter.delete('/api/run/:date', function (req, res, next) {
   debug('route DELETE /api/run/:date');
-  try {
-    await storage.deleteItem(req.params.date);
-    res.status(204).send('successfully deleted run');
-  } catch(err) {
-    debug('catch');
-    console.log(err);
+  RunModel.deleteOne({date: req.params.date})
+  .then((result) => {
+    if (result.deletedCount == 0) {
+      let err = createError(404, 'run not found');
+      next(err);
+      return;
+    }
+    res.sendStatus(204);
+  })
+  .catch(err => {
     next(err);
-  }
+  })
 })
+
+
 
 
 
