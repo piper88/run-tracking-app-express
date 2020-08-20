@@ -3,14 +3,14 @@
 const request = require('superagent');
 const RunModel = require('../model/run.js');
 const expect = require('chai').expect;
-const storage = require('../lib/storage.js');
 const debug = require('debug')('run:run-test');
+const moment = require('moment');
 
 require('../server.js');
 
 describe('testing run routes', function() {
   let run = {
-    date: 'today',
+    date: '2020-06-01',
     distance: 2,
     pace: 700,
   };
@@ -30,10 +30,10 @@ describe('testing run routes', function() {
         .catch(err => done(err));
       });
       it('should return a run', function(done) {
-        request.get('localhost:3000/api/run/today')
+        request.get('localhost:3000/api/run/2020-06-01')
         .end((err, res) => {
           if (err) return done(err);
-          expect(res.body.date).to.equal('today');
+          expect(res.body.date).to.equal('June 1st, 2020');
           expect(res.status).to.equal(200);
           done();
         });
@@ -52,7 +52,7 @@ describe('testing run routes', function() {
         .catch(err => done(err));
       });
       it('should return a 404 not found', function(done) {
-        request.get('localhost:3000/api/run/never')
+        request.get('localhost:3000/api/run/2020-07-01')
         .end((err, res) => {
           expect(res.status).to.equal(404);
           done();
@@ -73,7 +73,25 @@ describe('testing run routes', function() {
         .send(run)
         .end((err, res) => {
           if (err) return done(err);
-          expect(res.body.date).to.equal('today');
+          expect(res.body.date).to.equal('June 1st, 2020');
+          expect(res.status).to.equal(200);
+          done();
+        });
+      });
+    });
+
+    describe ('with valid body and date is today', function() {
+      after(done => {
+        RunModel.deleteOne({date: run.date})
+        .then(() => done())
+        .catch(err => done(err));
+      });
+      it('should return a run', function(done) {
+        request.post('localhost:3000/api/run')
+        .send({date: 'today', distance: 5, pace: 745})
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.body.date).to.equal(moment(Date.now()).format('MMMM Do, YYYY'));
           expect(res.status).to.equal(200);
           done();
         });
@@ -106,7 +124,7 @@ describe('testing run routes', function() {
     describe ('with missing distance', function() {
       it('should return a 403 error', function(done) {
         request.post('localhost:3000/api/run')
-        .send({date: 'yesterday', pace: 800})
+        .send({date: '2019-05-20', pace: 800})
         .end((err, res) => {
           expect(res.status).to.equal(403);
           expect(res.body.message).to.equal('Distance required\n');
@@ -117,7 +135,7 @@ describe('testing run routes', function() {
     describe ('with missing pace', function() {
       it('should return a 403 error', function(done) {
         request.post('localhost:3000/api/run')
-        .send({date: 'whenever', distance: 4.5})
+        .send({date: '2450-12-25', distance: 4.5})
         .end((err, res) => {
           expect(res.status).to.equal(403);
           expect(res.body.message).to.equal('Pace required\n');
@@ -165,7 +183,7 @@ describe('testing run routes', function() {
     });
 
   });
-
+  //
   describe('testing PUT /api/run', function() {
     debug('testing PUT /api/run');
 
@@ -176,13 +194,13 @@ describe('testing run routes', function() {
         .catch(err => done(err));
       });
       after(done => {
-        RunModel.deleteOne({date: 'tomorrow'})
+        RunModel.deleteOne({date: '2020-06-30'})
         .then(() => done())
         .catch(err => done(err));
       });
       it('should return a new item', function(done) {
-        request.put('localhost:3000/api/run/today')
-        .send({date: 'tomorrow', distance: 12, pace: 930})
+        request.put('localhost:3000/api/run/2020-06-01')
+        .send({date: '2020-06-30', distance: 12, pace: 930})
         .end((err, res) => {
           if (err) return done(err);
           expect(res.status).to.equal(200);
@@ -204,7 +222,7 @@ describe('testing run routes', function() {
         .catch(err => done(err));
       });
       it('should return a run with a new distance', function(done) {
-        request.put('localhost:3000/api/run/today')
+        request.put('localhost:3000/api/run/2020-06-01')
         .send({distance: 12})
         .end((err, res) => {
           if (err) return done(err);
@@ -227,7 +245,7 @@ describe('testing run routes', function() {
         .catch(err => done(err));
       });
       it('should return a run with a new pace', function(done) {
-        request.put('localhost:3000/api/run/today')
+        request.put('localhost:3000/api/run/2020-06-01')
         .send({pace: 500})
         .end((err, res) => {
           if (err) return done(err);
