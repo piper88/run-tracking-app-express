@@ -15,6 +15,7 @@ module.exports = runRouter;
 
 runRouter.get('/api/run/:date', async function (req, res, next) {
   debug('route GET /api/run/:date');
+  console.log('hey lady');
   req.params.date = moment(req.params.date).format('MMMM Do, YYYY');
     //not finding a document specified in search will not throw an error.
     let run = await RunModel.findOne({date: req.params.date});
