@@ -10,7 +10,7 @@ require('../server.js');
 
 describe('testing run routes', function() {
   let run = {
-    date: '2020-06-01',
+    date: 'June 1st, 2020',
     distance: 2,
     pace: 700,
   };
@@ -19,6 +19,7 @@ describe('testing run routes', function() {
 
     describe('with valid date', function() {
 
+      // let formattedDate = moment(run.date).format('MMMM Do, YYYY');
       before(done => {
         new RunModel({date: run.date, distance: run.distance, pace: run.pace}).save()
         .then(() => done())
@@ -32,6 +33,7 @@ describe('testing run routes', function() {
       it('should return a run', function(done) {
         request.get('localhost:3000/api/run/2020-06-01')
         .end((err, res) => {
+          console.log(res.body);
           if (err) return done(err);
           expect(res.body.date).to.equal('June 1st, 2020');
           expect(res.status).to.equal(200);
@@ -70,7 +72,11 @@ describe('testing run routes', function() {
       });
       it('should return a run', function(done) {
         request.post('localhost:3000/api/run')
-        .send(run)
+        .send({
+          date: '2020-06-01',
+          distance: 5,
+          pace: 700,
+        })
         .end((err, res) => {
           if (err) return done(err);
           expect(res.body.date).to.equal('June 1st, 2020');
@@ -153,7 +159,7 @@ describe('testing run routes', function() {
         .catch(err => done(err));
       });
       it('should return a 204 code', function(done) {
-        request.delete('localhost:3000/api/run/today')
+        request.delete('localhost:3000/api/run/2020-06-01')
         .end((err,res) => {
           if(err) return done(err);
           expect(res.status).to.equal(204);
@@ -183,7 +189,7 @@ describe('testing run routes', function() {
     });
 
   });
-  //
+
   describe('testing PUT /api/run', function() {
     debug('testing PUT /api/run');
 

@@ -16,11 +16,11 @@ module.exports = runRouter;
 runRouter.get('/api/run/:date', async function (req, res, next) {
   debug('route GET /api/run/:date');
   console.log('hey lady');
-  req.params.date = moment(req.params.date).format('MMMM Do, YYYY');
+  let formattedDate = moment(req.params.date).format('MMMM Do, YYYY');
     //not finding a document specified in search will not throw an error.
-    let run = await RunModel.findOne({date: req.params.date});
+    let run = await RunModel.findOne({date: formattedDate});
     if (run)  {
-      //rse.json identical to res.send when what's passed in is object or array, but res.json will also convert non objects (e.g. null and undefined)
+      //res.json identical to res.send when what's passed in is object or array, but res.json will also convert non objects (e.g. null and undefined)
       res.json(run);
       return;
     }
@@ -62,6 +62,7 @@ runRouter.delete('/api/run/:date', function (req, res, next) {
   if (req.params.date === 'today') {
     req.params.date = moment(Date.now()).format('MMMM Do, YYYY');
   } else {
+    console.log(`req.params.date ${req.params.date}`)
     req.params.date = moment(req.params.date).format('MMMM Do, YYYY');
   }
   RunModel.deleteOne({date: req.params.date})
@@ -86,7 +87,7 @@ runRouter.put('/api/run/:date', parseJSON, async function(req, res, next) {
     next(err);
     return;
   }
-  //changes date to format that exists in db
+
   if (req.params.date === 'today') {
     req.params.date = moment(Date.now()).format('MMMM Do, YYYY');
   } else {
