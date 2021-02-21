@@ -1,10 +1,10 @@
 const express = require('express');
 const debug = require('debug')('run:server');
 const mongoose = require('mongoose');
-
 const runRouter = require('./route/run-router.js');
 const errorHandling = require('./lib/error-handling.js');
 
+require('dotenv').config({path: `../.env}`})
 const PORT = process.env.PORT || 3000;
 const app = express();
 
@@ -13,10 +13,11 @@ app.use(errorHandling);
 
 app.listen(PORT, () => {
   console.log(`server up on ${PORT}`);
+  console.log(`mongodb uri ${process.env.MONGODB_URI}`)
 });
 
 //using atlas version of mongoDB
-mongoose.connect('mongodb+srv://sdebey88:8x18pi$74SNB@cluster0.wjb0y.mongodb.net/workouts?retryWrites=true&w=majority', {useFindAndModify: false, useNewUrlParser: true,  useUnifiedTopology: true}).then(() => {
+mongoose.connect(process.env.MONGODB_URI, {useFindAndModify: false, useNewUrlParser: true,  useUnifiedTopology: true}).then(() => {
   console.log('Database connection successful');
 }).catch(() => {
   console.error('Database connection unsuccessful');
