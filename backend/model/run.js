@@ -1,9 +1,7 @@
 const createError = require('http-errors');
 const debug = require('debug');
 let mongoose = require('mongoose');
-let validator = require('validator');
-
-
+// let validator = require('validator');
 
 var runSchema = new mongoose.Schema({
   //user should input date as YYYY/MM/DD
