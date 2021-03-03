@@ -27,7 +27,7 @@ mongoose.connection.on('error', err => {
   console.error(err);
 });
 
-//to use locally downloaded version of mongoDB, change uri connection path to: mongodb://localhost:27017/<dbname>
+//to use local version of mongoDB, change uri connection path to: mongodb://localhost:27017/<dbname>
 // mongoose.connect('mongodb://localhost:27017/run', {useFindAndModify: false, useNewUrlParser: true,  useUnifiedTopology: true}).then(() => {
 //   console.log('Database connection successful');
 // }).catch(() => {
