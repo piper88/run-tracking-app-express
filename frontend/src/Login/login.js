@@ -13,7 +13,7 @@ const Login = (props) => {
 
   function handleChange(event) {
     let credentials = event.target;
-    event.name ==='user' ? setUserName(credentials.value) : setUserPassword(credentials.value);
+    event.target.name ==='user' ? setUserName(credentials.value) : setUserPassword(credentials.value);
   }
 
   return (
