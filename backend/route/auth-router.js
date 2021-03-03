@@ -17,7 +17,11 @@ authRouter.post('/api/signup', parseJSON, async (req, res, next) => {
 
   let user = new UserModel({email: email, password: hashedPass})
 
-  let doc = await user.save()
-  debug(`user in authRouter ${doc}`)
-  res.json(doc);
+  user.save()
+  .then(doc => {
+    res.json(doc);
+  })
+  .catch(err => {
+    next(err);
+  })
 })

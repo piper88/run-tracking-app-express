@@ -24,5 +24,18 @@ describe('testing auth routes', function() {
         })
       })
     })
+    describe('with missing email', function() {
+      it('should return a 403 error', function(done) {
+        request.post('localhost:3000/api/signup')
+        .send({
+          password: 'passwort',
+        })
+        .end((err, res) => {
+          expect(res.body.message).to.equal('Email required\n');
+          expect(res.status).to.equal(403);
+          done();
+        })
+      })
+    })
   })
 })
