@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "DEBUG='run*' node server.js",
-    "test": "DEBUG='run*' ./node_modules/mocha/bin/mocha --exit"
+    "test": "DEBUG='run*' ./node_modules/mocha/bin/mocha --exit --timeout 15000"
   },
   "repository": {
     "type": "git",

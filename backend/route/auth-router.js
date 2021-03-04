@@ -12,16 +12,15 @@ module.exports = authRouter;
 authRouter.post('/api/signup', parseJSON, async (req, res, next) => {
   debug('authRouter post /api/signup');
 
-  let hashedPass = await hashPass(req.body.password);
-  let email = req.body.email;
+  try {
+    let hashedPass = await hashPass(req.body.password);
+    let email = req.body.email;
+    let user = new UserModel({email: email, password: hashedPass})
+    let doc = await user.save()
+    res.json(doc)
 
-  let user = new UserModel({email: email, password: hashedPass})
+  } catch(err) {
+    next(err)
+  }
 
-  user.save()
-  .then(doc => {
-    res.json(doc);
-  })
-  .catch(err => {
-    next(err);
-  })
 })

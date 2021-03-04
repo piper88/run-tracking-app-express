@@ -22,7 +22,7 @@ describe('testing auth routes', function() {
           expect(res.body.email).to.equal('piper88@gmail.com');
           done();
         })
-      })
+      });
     })
     describe('with missing email', function() {
       it('should return a 403 error', function(done) {
@@ -32,6 +32,19 @@ describe('testing auth routes', function() {
         })
         .end((err, res) => {
           expect(res.body.message).to.equal('Email required\n');
+          expect(res.status).to.equal(403);
+          done();
+        })
+      })
+    })
+    describe('with missing password', function() {
+      it('should return a 403 error', function(done) {
+        request.post('localhost:3000/api/signup')
+        .send({
+          email: 'nick@nick.com',
+        })
+        .end((err, res) => {
+          expect(res.body.message).to.equal('Please enter password\n');
           expect(res.status).to.equal(403);
           done();
         })
