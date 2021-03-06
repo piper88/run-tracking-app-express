@@ -33,7 +33,6 @@ authRouter.post('/api/signup', parseJSON, async (req, res, next) => {
 //TODO: move logic to controller
 //authrouter for logging in
 authRouter.post('/api/login', parseJSON, async (req, res, next) => {
-  console.log('IM SICK OF THE INTERNET')
   debug('authRouter get /api/login');
   //get the email and password from the req.body
   let email = req.body.email;
