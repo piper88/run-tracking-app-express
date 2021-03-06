@@ -20,9 +20,7 @@ userSchema.methods.generatePasswordHash = function (password) {
         return reject(createError(403, 'Invalid user credentials'));
       }
       debug(`hashedPassword ${hashedPassword}`)
-      // this.password = hashedPassword;
-      // this.email = email
-      //what is this? is this the userSchema? or the method?
+
       resolve(hashedPassword);
     });
   })

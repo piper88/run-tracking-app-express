@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const debug = require('debug')('run:hash-pass.js')
 const createError = require('http-errors');
 
+//not using. Put on userschema instead.
 const hashPass = (password) => {
   debug('hashPass');
   return new Promise((resolve, reject) => {
