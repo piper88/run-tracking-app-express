@@ -52,20 +52,20 @@ describe('testing auth routes', function() {
     // })
   })
 
-  describe('testing POST /api/login', function() {
-    describe('with valid user credentials', function() {
-      it('should return a token', function(done) {
-        request.post('localhost:3000/api/login')
-        .send({
-          email: 'piper85@gmail.com',
-          password: '123abc'
-        })
-        .end((err, res) => {
-          if(err) return done(err);
-          expect(res.body.message).to.equal('User successfully logged in!');
-          done();
-        })
-      })
-    })
-  })
+  // describe('testing POST /api/login', function() {
+  //   describe('with valid user credentials', function() {
+  //     it('should return a token', function(done) {
+  //       request.post('localhost:3000/api/login')
+  //       .send({
+  //         email: 'piper85@gmail.com',
+  //         password: '123abc'
+  //       })
+  //       .end((err, res) => {
+  //         if(err) return done(err);
+  //         expect(res.body.message).to.equal('User successfully logged in!');
+  //         done();
+  //       })
+  //     })
+  //   })
+  // })
 })

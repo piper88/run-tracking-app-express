@@ -11,19 +11,22 @@ const authRouter = new Router();
 
 module.exports = authRouter;
 
-//authrouter for signing up
 authRouter.post('/api/signup', parseJSON, async (req, res, next) => {
   debug('authRouter post /api/signup');
 
-  try {
-    let hashedPass = await hashPass(req.body.password);
-    let email = req.body.email;
-    let user = new UserModel({email: email, password: hashedPass})
-    let doc = await user.save()
-    res.json(doc)
+  //save the user with just the email so you have access to the user object
+  let password = req.body.password;
+  delete req.body.password;
 
+  let user = new UserModel({email: req.body.email});
+
+  try {
+    password = await user.generatePasswordHash(password)
+    user.password = password;
+    let doc = await user.save();
+    res.json(doc);
   } catch(err) {
-    next(err)
+    debug(err)
   }
 })
 

@@ -1,15 +1,8 @@
-const mongoose = require('mongoose');
-const createError = require('http-errors');
 const bcrypt = require('bcryptjs');
-const debug = require('debug')('run: userModel');
+const debug = require('debug')('run:hash-pass.js')
+const createError = require('http-errors');
 
-const userSchema = new mongoose.Schema({
-  email: {type: String, required: [true, 'Email required']},
-  password: {type: String},
-  // password: {type: String, required: [true, 'Please enter password']}
-});
-
-userSchema.methods.generatePasswordHash = function (password) {
+const hashPass = (password) => {
   debug('hashPass');
   return new Promise((resolve, reject) => {
     //if password is missing, resolve null in order to handle error with mongoose validation
@@ -20,12 +13,9 @@ userSchema.methods.generatePasswordHash = function (password) {
         return reject(createError(403, 'Invalid user credentials'));
       }
       debug(`hashedPassword ${hashedPassword}`)
-      // this.password = hashedPassword;
-      // this.email = email
-      //what is this? is this the userSchema? or the method?
-      resolve(hashedPassword);
+      return resolve(hashedPassword);
     });
   })
 }
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = hashPass;
