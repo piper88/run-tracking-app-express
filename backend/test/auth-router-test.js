@@ -2,7 +2,9 @@
 
 const request = require('superagent');
 const UserModel = require('../model/user.js');
+const userMock = require('./lib/user-mock')
 const expect = require('chai').expect;
+const debug = require('debug')('run:auth-router-test');
 
 require('../server.js');
 
@@ -13,6 +15,14 @@ describe('testing auth routes', function() {
   };
 
   describe('testing POST /api/signup', function() {
+  after((done) => {
+    //clean up database by removing all users
+    UserModel.remove({}, (err, res) => {
+      if (err) done(err);
+      if (res) debug('successfully deleted mock');
+      done();
+    })
+  })
     describe('with valid user credentials', function() {
       it('should return a user', function(done) {
         request.post('localhost:3000/api/signup')
@@ -38,9 +48,6 @@ describe('testing auth routes', function() {
       })
     })
 
-    //failing. returning undefined
-    // run:auth-controller hit signup controller +100ms
-  // run: userModel hashPass +6ms
     describe('with missing password', function() {
       it('should return a 403 error', function(done) {
         request.post('localhost:3000/api/signup')
@@ -56,15 +63,31 @@ describe('testing auth routes', function() {
     })
   })
 
-
-  //TODO: Make a user mock file to create fake users that you can then try and login
   describe('testing POST /api/login', function() {
+    //before is run once before ALL tests within a describe block
+    //beforeEach is run before every test (before every it block)
+    // before((done) => {
+    //   //calling userMock.call makes the 'this' of userMock this enclosing function (the describe statement). So then you can use 'this', and it will refer to the this of userMock
+    //   userMock.call(this, done)
+    // })
+    after((done) => {
+      //clean up database by removing all users
+      UserModel.remove({}, (err, res) => {
+        if (err) done(err);
+        if (res) debug('successfully deleted mock');
+        done();
+      })
+    })
     describe('with valid user credentials', function() {
-      it('should return a token', function(done) {
+      before((done) => {
+        //calling userMock.call makes the 'this' of userMock this enclosing function (the describe statement). So then you can use 'this', and it will refer to the this of userMock
+        userMock.call(this, done)
+      })
+      it('should return a token', (done) => {
         request.post('localhost:3000/api/login')
         .send({
-          email: 'piper04@gmail.com',
-          password: '123abc'
+          email: this.tempEmail,
+          password: this.tempPassword
         })
         .end((err, res) => {
           if(err) return done(err);
@@ -74,7 +97,10 @@ describe('testing auth routes', function() {
       })
     })
     describe('with invalid email', function() {
-      it('should return the message of user not found', function(done) {
+      before((done) => {
+        userMock.call(this, done)
+      })
+      it('should return the message of user not found', (done) => {
         request.post('localhost:3000/api/login')
         .send({
           email: 'wrong@gmail.com',
@@ -87,10 +113,13 @@ describe('testing auth routes', function() {
       })
     })
     describe('with invalid password', function() {
-      it('should return the message of Incorrect password', function(done) {
+      before((done) => {
+        userMock.call(this, done)
+      })
+      it('should return the message of Incorrect password', (done) => {
         request.post('localhost:3000/api/login')
         .send({
-          email: 'piper04@gmail.com',
+          email: this.tempEmail,
           password: 'wrongpassword',
         })
         .end((err, res) => {
