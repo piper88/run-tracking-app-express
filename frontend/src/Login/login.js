@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+// TODO: Make Signup component, either separate or just conditionally render signup/login
+
 const Login = (props) => {
 
   const [userName, setUserName] = useState('');
