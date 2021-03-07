@@ -66,10 +66,10 @@ describe('testing auth routes', function() {
   describe('testing POST /api/login', function() {
     //before is run once before ALL tests within a describe block
     //beforeEach is run before every test (before every it block)
-    before((done) => {
-      //calling userMock.call makes the 'this' of userMock this enclosing function (the describe statement). So then you can use 'this', and it will refer to the this of userMock
-      userMock.call(this, done)
-    })
+    // before((done) => {
+    //   //calling userMock.call makes the 'this' of userMock this enclosing function (the describe statement). So then you can use 'this', and it will refer to the this of userMock
+    //   userMock.call(this, done)
+    // })
     after((done) => {
       //clean up database by removing all users
       UserModel.remove({}, (err, res) => {
@@ -79,11 +79,15 @@ describe('testing auth routes', function() {
       })
     })
     describe('with valid user credentials', function() {
-      it('should return a token', function(done) {
+      before((done) => {
+        //calling userMock.call makes the 'this' of userMock this enclosing function (the describe statement). So then you can use 'this', and it will refer to the this of userMock
+        userMock.call(this, done)
+      })
+      it('should return a token', (done) => {
         request.post('localhost:3000/api/login')
         .send({
-          email: this.exampleUser.email,
-          password: this.exampleUser.password
+          email: this.tempEmail,
+          password: this.tempPassword
         })
         .end((err, res) => {
           if(err) return done(err);
@@ -93,7 +97,10 @@ describe('testing auth routes', function() {
       })
     })
     describe('with invalid email', function() {
-      it('should return the message of user not found', function(done) {
+      before((done) => {
+        userMock.call(this, done)
+      })
+      it('should return the message of user not found', (done) => {
         request.post('localhost:3000/api/login')
         .send({
           email: 'wrong@gmail.com',
@@ -106,10 +113,13 @@ describe('testing auth routes', function() {
       })
     })
     describe('with invalid password', function() {
-      it('should return the message of Incorrect password', function(done) {
+      before((done) => {
+        userMock.call(this, done)
+      })
+      it('should return the message of Incorrect password', (done) => {
         request.post('localhost:3000/api/login')
         .send({
-          email: this.exampleUser.email,
+          email: this.tempEmail,
           password: 'wrongpassword',
         })
         .end((err, res) => {

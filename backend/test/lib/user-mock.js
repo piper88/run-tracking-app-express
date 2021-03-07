@@ -2,20 +2,21 @@ const UserModel = require('../../model/user');
 const mongoose = require('mongoose');
 const debug = require('debug')('run: user-mock')
 //sign up fake user
-const userMock = async (done) => {
+const userMock = async function (done) {
   debug('user mock');
 
   let exampleUser = {
     email: 'example55@hotmail.com',
+    password: 'password47',
   }
-  let examplePass = 'password47';
+  //save this.tempEmail for use in tests
+  this.tempEmail = exampleUser.email;
+  this.tempPassword = exampleUser.password
 
   let user = new UserModel({email: exampleUser.email})
 
   try {
-    user.password = await user.generatePasswordHash(examplePass);
-    //set hashedPassword on exampleUser object, so it can accessed via the test file
-    exampleUser.password = user.password
+    user.password = await user.generatePasswordHash(exampleUser.password);
     let doc = await user.save();
     debug(doc)
     done();
