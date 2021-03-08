@@ -14,8 +14,14 @@ const signup = async (req, res, next) => {
   try {
     password = await user.generatePasswordHash(password)
     user.password = password;
-    let doc = await user.save();
-    res.json(doc);
+    await user.save();
+    //return token as response
+    let token = jwt.sign({email: user.email}, 'verySecretValue', {expiresIn: '1h'});
+    res.json({
+      message: 'User successfully logged in!',
+      token,
+    })
+    // res.json(doc);
   } catch(err) {
     next(err)
   }
