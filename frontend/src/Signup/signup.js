@@ -28,7 +28,7 @@ const Signup = (props) => {
         break;
       // for confirmPassword case
       default:
-        setUserConfirmedPassword(event.taret.value);
+        setUserConfirmedPassword(event.target.value);
         break;
     }
   }

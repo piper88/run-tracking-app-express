@@ -18,7 +18,7 @@ const signup = async (req, res, next) => {
     //return token as response
     let token = jwt.sign({email: user.email}, 'verySecretValue', {expiresIn: '1h'});
     res.json({
-      message: 'User successfully logged in!',
+      email: user.email,
       token,
     })
     // res.json(doc);
@@ -46,7 +46,7 @@ const login = async (req, res, next) => {
         if (result) {
           let token = jwt.sign({email: user.email}, 'verySecretValue', {expiresIn: '1h'});
           res.json({
-            message: 'User successfully logged in!',
+            email: user.email,
             token,
           })
         } else {

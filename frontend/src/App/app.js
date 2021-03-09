@@ -17,11 +17,13 @@ const App = (props) => {
     axios.post('/api/login', {
       email, password
     }).then(response => {
-      localStorage.setItem(response.token);
+      localStorage.setItem('token', response.data.token);
       setLoggedIn(true);
-      setUser(response.email)
+      setUser(response.data.email)
     })
-    console.log( `email ${email}: password ${password}`);
+    .catch(err => {
+      console.error(err);
+    })
   }
 
 function handleClick(event) {
@@ -43,10 +45,11 @@ function signupUser(email, password) {
     console.log(`response in signupUser`);
     console.log(response);
     //cache response.token to localStorage
-    localStorage.setItem(response.token);
-    setUser(response.email);
+    localStorage.setItem('token', response.data.token);
+    //not currently returning email, only token?
+    setUser(response.data.email);
     setLoggedIn(true);
-    console.log(response.token);
+    console.log(response.data.token);
   })
   .catch(err => {
     //do something with the error...tbd
