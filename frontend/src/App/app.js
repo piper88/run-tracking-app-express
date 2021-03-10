@@ -13,7 +13,6 @@ const App = (props) => {
   // used for returning users after signup and login
   function loginUser(email, password) {
     //send request to backend to either create or retrieve user, then set user here
-
     axios.post('/api/login', {
       email, password
     }).then(response => {

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-
-// TODO: Make Signup component, either separate or just conditionally render signup/login
-//Have default be login, if not a user, choosee signup
+import handleToggle from '../utils/toggleUtil.js';
+import './login.css';
 
 const Login = (props) => {
 
@@ -27,12 +26,19 @@ const Login = (props) => {
       name="email"
       placeholder="Enter email">
       </input>
+      <div className="container">
       <input
-      type="text"
+      type="password"
+      id="password"
       onChange={handleChange.bind(this)}
       name="password"
-      placeholder="Password">
+      placeholder="Enter password">
       </input>
+      <i
+      className="far fa-eye"
+      id="togglePassword"
+      onClick={handleToggle.bind(this)}></i>
+      </div>
       <button>Login</button>
     </form>
   )
