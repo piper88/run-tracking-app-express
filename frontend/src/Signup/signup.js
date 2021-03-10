@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import handleToggle from '../utils/toggleUtil.js';
 const Signup = (props) => {
 
   const [userEmail, setUserEmail] = useState('');
@@ -43,17 +43,27 @@ const Signup = (props) => {
       >
       </input>
       <input
-      type="text"
+      type="password"
+      id="password"
       onChange={handleChange.bind(this)}
       name="password"
       placeholder="Enter password">
       </input>
+      <i
+      className="far fa-eye"
+      id="togglePassword"
+      onClick={handleToggle.bind(this)}></i>
       <input
-      type="text"
+      type="password"
+      id="confirmPassword"
       onChange={handleChange.bind(this)}
       name="confirmPassword"
       placeholder="Confirm password">
       </input>
+      <i
+      className="far fa-eye"
+      id="togglePassword"
+      onClick={handleToggle.bind(this)}></i>
       <button>Signup</button>
     </form>
   )
