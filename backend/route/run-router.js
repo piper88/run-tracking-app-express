@@ -13,6 +13,10 @@ const runRouter = new Router();
 
 module.exports = runRouter;
 
+// TODO: Move logic to run-controller
+// TODO: Change routes to include emails, so that runs are associated with individuals
+// TODO: include bearer auth token with all requests? 
+
 runRouter.get('/api/run/:date', async function (req, res, next) {
   debug('route GET /api/run/:date');
   console.log('hey lady');
@@ -28,8 +32,7 @@ runRouter.get('/api/run/:date', async function (req, res, next) {
     next(err);
   });
 
-
-
+// TODO: Change post to include email of user, so that runs are associated with individuals
 runRouter.post('/api/run', parseJSON, function (req, res, next) {
   debug('route POST /api/run');
   let formattedDate;
